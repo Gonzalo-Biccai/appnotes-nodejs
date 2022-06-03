@@ -2,7 +2,7 @@
     {{#each notes}}
         <div class="col-md-3 mb-2">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body pb-2">
                     <h4 class="card-title d-flex justify-content-between align-items-center">
                         {{title}} <a href="/notes/edit/{{_id}}"><i class="fa fa-pencil"></i></a>
                     </h4>
@@ -13,8 +13,99 @@
                             Delete
                         </button>
                     </form>
+                    <p class="text-right mt-2 mb-0">-{{creador}}</p>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+    {{#each timeNotes}}
+        <div class="col-md-3 mb-2">
+            <div class="card">
+                <div class="card-body pb-2">
+                    <h4 class="card-title d-flex justify-content-between align-items-center">
+                        {{title}} <a href="/notes/edit/{{_id}}"><i class="fa fa-pencil"></i></a>
+                    </h4>
+                    <p class="note-time">{{time}}</p>
+                    <form action="/notes/delete/{{_id}}?_method=DELETE" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="btn btn-danger btn-block btn-sm">
+                            Delete
+                        </button>
+                    </form>
+                    <p class="text-right mt-2 mb-0">-{{creador}}</p>
                 </div>
             </div>
         </div>
     {{/each}}
 </div>
+
+<script>
+    //console.log(123)
+    var notasTime = document.getElementsByClassName('note-time')
+    var allNotasTime = []
+
+    for(const nota of notasTime){
+        allNotasTime.push(nota.innerHTML)
+        nota.innerHTML = ''
+    }
+
+    function time(t){
+    setTimeout(() => {
+        fechaActual = new Date()
+        let n = 0
+        //console.log(allNotasTime[0])
+        for(let nota of notasTime){
+            var fecha = new Date(allNotasTime[n])
+            n++
+            var diff = Math.abs(fechaActual - fecha)
+            if(fechaActual >= fecha){ nota.innerHTML = 'Finalizado' }
+            else{ nota.innerHTML = covertMS(diff) }
+            
+            //console.log(nota)
+        }
+        time(1000)
+    }, t);
+}
+
+time(0)
+
+function covertMS(ms){
+    var seconds = Math.floor(ms / 1000)
+    var minutes = Math.floor(seconds / 60)
+    var hours = Math.floor(minutes / 60)
+    var days = Math.floor(hours / 24)
+    var month = Math.floor(days / 30)
+    var year = Math.floor(month / 12)
+
+    seconds = seconds % 60
+    minutes = minutes % 60
+    hours = hours % 24
+    days = days % 30
+    month = month % 30
+
+    var horarioRestante = ''
+
+    if(year != 0){ horarioRestante += year.toString() + "y " }
+    if(month != 0){ horarioRestante += month.toString() + "m " }
+    if(days != 0){ horarioRestante += days.toString() + "d | " }
+
+    if(hours.toString().length == 1){ hours = '0' + hours }
+    if(minutes.toString().length == 1){ minutes = '0' + minutes }
+    if(seconds.toString().length == 1){ seconds = '0' + seconds }
+
+    horarioRestante += hours.toString() + ":" + minutes.toString() + ":" + seconds.toString()
+
+    return horarioRestante
+
+    /*
+    return (
+        year.toString() + "y " + 
+        month.toString() + "m " + 
+        days.toString() + "d | " + 
+        hours.toString() + ":" + 
+        minutes.toString() + ":" + 
+        seconds.toString()
+    )
+    */
+}
+</script>

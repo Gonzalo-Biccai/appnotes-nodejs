@@ -9,8 +9,22 @@
                     <input type="text" name="title" class="form-control" placeholder="Title" autofocus>
                 </div>
                 <div class="form-group">
-                    <textarea name="description" placeholder="Description" class="form-control"></textarea>
+                    <select class="custom-select mr-sm-2" name="noteType" id="inlineFormCustomSelect">
+                        <option selected>Descripcion</option>
+                        <option>Tiempo</option>
+                        <option>Lista</option>
+                    </select>
                 </div>
+
+                <div class="form-group">
+                    <div class="form-group" id="descriptionGroup">
+                        <textarea name="description" placeholder="Description" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group" id="datetimeGroup">
+                        <input type="datetime-local" name="datetimeLocal" id="">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <button class="btn btn-primary btn-block">
                         Save
@@ -20,3 +34,32 @@
         </div>
     </div>
 </div>
+
+<script>
+    var noteType = document.getElementById('inlineFormCustomSelect')
+    //console.log(noteType.value)
+
+    const descriptionGroup = document.getElementById('descriptionGroup')
+    const datetimelocalGroup = document.getElementById('datetimeGroup')
+
+    descriptionGroup.style.display = 'none'
+    datetimelocalGroup.style.display = 'none'
+
+    function changeNoteType() {
+        switch (noteType.value) {
+            case "Descripcion":
+                descriptionGroup.style.display = 'block'
+                datetimelocalGroup.style.display = 'none'
+                break;
+            case "Tiempo":
+                descriptionGroup.style.display = 'none'
+                datetimelocalGroup.style.display = 'block'
+                break;
+            case "Lista":
+                break;
+        }
+    }
+
+    changeNoteType()
+    noteType.addEventListener('change', changeNoteType)
+</script>
